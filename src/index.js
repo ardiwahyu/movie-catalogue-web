@@ -1,3 +1,4 @@
+import "regenerator-runtime";
 import "bootstrap"
 import "bootstrap/dist/css/bootstrap.css";
 import "./styles/main.css";
