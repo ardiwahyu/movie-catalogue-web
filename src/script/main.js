@@ -5,154 +5,111 @@ import pagination from './component/pagination.js';
 function main() {
     const movieListElement = document.querySelector("list-movie");
     const overlay = document.querySelector(".overlay");
-    let pageNow, totalPage, search, queryActive, typeActive, filterActive;
+    const activeSelector = document.querySelector("#active-selector");
+    const dropdown = document.querySelector("#navbarDropdown");
+    const terpopuler = document.querySelector("#terpopuler");
+    const nowPlaying = document.querySelector("#now-playing");
+    const movie = document.querySelector("#movie");
+    const tv = document.querySelector("#tv");
+    const url = new URL(window.location.href);
+    let type = url.searchParams.get("type");
+    const filter = url.searchParams.get("filter");
+    const search = url.searchParams.get("s");
+    const page = url.searchParams.get("page");
+    let pageNow, totalPage, urlSend = window.location.origin;
 
-    const getContent = async (type = "movie", filter = "popular", page = 1) => {
+    const getContent = async () => {
         overlay.classList.add("show");
-        search = false;
-        typeActive = type;
-        filterActive = filter;
+        let typeText;
+        if (type == "tv") {
+            typeText = "TV";
+            movie.classList.remove("active");
+            tv.classList.add("active");
+        } else {
+            typeText = "Movie";
+            movie.classList.add("active");
+            tv.classList.remove("active");
+        }
+        if (filter == "now_playing" || filter == "on_the_air") {
+            dropdown.innerHTML = "Now Playing ";
+        } else {
+            dropdown.innerHTML = "Popular ";
+        }
         try {
-            const result = await ApiServices.getContent(type, filter, page);
+            let result;
+            if (type == null) {
+                result = await ApiServices.getContent("movie", "popular", 1);
+                activeSelector.innerHTML = `Movie Popular`
+                type = "movie"
+                urlSend = `${window.location.origin}?type=${type}&filter=popular`
+            } else {
+                if (search == null) {
+                    result = await ApiServices.getContent(type, filter, page);
+                    activeSelector.innerHTML = `${typeText} ${dropdown.innerText}`
+                    urlSend = `${window.location.origin}?type=${type}&filter=${filter}`
+                } else {
+                    result = await ApiServices.searchContent(type, search, page);
+                    activeSelector.innerHTML = `${typeText} search: ${search}`
+                    urlSend = `${window.location.origin}?type=${type}&s=${search}`
+                }
+            }
             pageNow = result.page;
             totalPage = result.total_pages;
             renderResult(result.results, type);
         } catch (message) {
             console.log(message);
         }
-    }
-
-    const searchContent = async (type, query, page = 1) => {
-        overlay.classList.add("show");
-        search = true;
-        typeActive = type;
-        queryActive = query;
-        try {
-            const result = await ApiServices.searchContent(type, query, page);
-            pageNow = result.page;
-            totalPage = result.total_pages;
-            renderResult(result.results, type);
-        } catch (message) {
-            console.log(message);
-        }
-    }
-
-    const setButtonPagination = () => {
-
-        const next = document.querySelector("#next");
-        const prev = document.querySelector("#previous");
-        const number = document.querySelector(".pagination-item").querySelectorAll(".number-item");
-
-        next.addEventListener("click", function () {
-            if (pageNow < totalPage) {
-                if (search) {
-                    searchContent(typeActive, queryActive, pageNow + 1);
-                } else {
-                    getContent(typeActive, filterActive, pageNow + 1);
-                }
-            }
-        });
-
-        prev.addEventListener("click", function () {
-            if (pageNow > 1) {
-                if (search) {
-                    searchContent(typeActive, queryActive, pageNow - 1);
-                } else {
-                    getContent(typeActive, filterActive, pageNow - 1);
-                }
-            }
-        });
-
-        for (let i = 0; i < number.length; i++) {
-            number[i].addEventListener("click", function () {
-                const page = number[i].querySelector("a");
-                if (search) {
-                    searchContent(typeActive, queryActive, `${page.innerText}`);
-                } else {
-                    getContent(typeActive, filterActive, `${page.innerText}`);
-                }
-            })
-        }
-    }
-
-    function topFunction() {
-        document.body.scrollTop = 0;
-        document.documentElement.scrollTop = 0;
     }
 
     const renderResult = (result, type) => {
         overlay.classList.remove("show");
         movieListElement.type = type;
         movieListElement.items = result;
-        pagination(pageNow, totalPage);
-        setButtonPagination();
-        topFunction();
+        pagination(pageNow, totalPage, urlSend);
     }
 
     document.addEventListener("DOMContentLoaded", () => {
-        const activeSelector = document.querySelector("#active-selector");
-        const movie = document.querySelector("#movie");
-        const tv = document.querySelector("#tv");
-        const dropdown = document.querySelector("#navbarDropdown");
-        const terpopuler = document.querySelector("#terpopuler");
-        const nowPlaying = document.querySelector("#now-playing");
         const form = document.querySelector("#form-search");
         const input = document.querySelector("#input-search");
 
         movie.addEventListener("click", function () {
-            movie.classList.add("active");
-            tv.classList.remove("active");
-            activeSelector.innerHTML = `Movie ${dropdown.innerHTML}`;
             if (`${dropdown.innerText}` == "Popular ") {
-                getContent("movie", "popular");
+                movie.setAttribute("href", `${window.location.origin}?type=movie&filter=popular`);
             } else {
-                getContent("movie", "now_playing");
+                movie.setAttribute("href", `${window.location.origin}?type=movie&filter=now_playing`);
             }
         })
 
         tv.addEventListener("click", function () {
-            movie.classList.remove("active");
-            tv.classList.add("active");
-            activeSelector.innerHTML = `TV ${dropdown.innerHTML}`;
             if (`${dropdown.innerText}` == "Popular ") {
-                getContent("tv", "popular");
+                tv.setAttribute("href", `${window.location.origin}?type=tv&filter=popular`);
             } else {
-                getContent("tv", "on_the_air");
+                tv.setAttribute("href", `${window.location.origin}?type=tv&filter=on_the_air`);
             }
         })
 
         terpopuler.addEventListener("click", function () {
-            dropdown.innerHTML = "Popular";
             if (movie.classList.contains("active")) {
-                activeSelector.innerHTML = `Movie ${dropdown.innerHTML}`;
-                getContent("movie", "popular");
+                terpopuler.setAttribute("href", `${window.location.origin}?type=movie&filter=popular`);
             } else {
-                activeSelector.innerHTML = `TV ${dropdown.innerHTML}`;
-                getContent("tv", "popular");
+                terpopuler.setAttribute("href", `${window.location.origin}?type=tv&filter=popular`);
             }
         })
 
         nowPlaying.addEventListener("click", function () {
-            dropdown.innerHTML = "Now Playing";
             if (movie.classList.contains("active")) {
-                activeSelector.innerHTML = `Movie ${dropdown.innerHTML}`;
-                getContent("movie", "now_playing");
+                nowPlaying.setAttribute("href", `${window.location.origin}?type=movie&filter=now_playing`);
             } else {
-                activeSelector.innerHTML = `TV ${dropdown.innerHTML}`;
-                getContent("tv", "on_the_air");
+                nowPlaying.setAttribute("href", `${window.location.origin}?type=tv&filter=on_the_air`);
             }
         })
 
         form.addEventListener("submit", function () {
-            queryActive = `${input.value}`;
             if (movie.classList.contains("active")) {
-                activeSelector.innerHTML = `Movie search: ${input.value}`;
-                searchContent("movie", `${input.value}`);
+                window.location.href = `${window.location.origin}?type=movie&s=${input.value}`;
             } else {
-                activeSelector.innerHTML = `TV search: ${input.value}`;
-                searchContent("tv", `${input.value}`);
+                window.location.href = `${window.location.origin}?type=tv&s=${input.value}`;
             }
-            input.value = "";
         })
 
         getContent();

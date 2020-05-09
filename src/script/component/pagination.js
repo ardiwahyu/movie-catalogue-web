@@ -1,17 +1,28 @@
-function pagination(pageNow, totalPage) {
+function pagination(pageNow, totalPage, base) {
 
     const pagination = document.querySelector("#navigation");
     const paginationItem = document.querySelector(".pagination-item");
+    let urlPrev, urlNext;
+    if (pageNow < totalPage) {
+        urlNext = `${base}&page=${pageNow + 1}`
+    } else {
+        urlNext = "javascript:void(0)";
+    }
+    if (pageNow > 1) {
+        urlPrev = `${base}&page=${pageNow - 1}`
+    } else {
+        urlPrev = "javascript:void(0)";
+    }
 
     const setPagination = () => {
         paginationItem.innerHTML = `
             <li class="page-item" id="previous">
-                <a class="page-link" href="javascript:void(0)" aria-label="Previous">
+                <a class="page-link" href="${urlPrev}" aria-label="Previous">
                     <span aria-hidden="true">&laquo;</span>
                 </a>
             </li>
         `
-        if (totalPage == 1) {
+        if (totalPage == 1 || totalPage == 0) {
             pagination.classList.remove("show");
             pagination.classList.add("hidden");
         } else {
@@ -22,12 +33,12 @@ function pagination(pageNow, totalPage) {
                     if (i + 1 == pageNow) {
                         paginationItem.innerHTML += `
                         <li class="page-item active number-item">
-                            <a class="page-link" href="javascript:void(0)">${i + 1}</a>
+                            <a class="page-link" href="${base}&page=${i + 1}">${i + 1}</a>
                         </li>`;
                     } else {
                         paginationItem.innerHTML += `
                         <li class="page-item number-item">
-                            <a class="page-link" href="javascript:void(0)">${i + 1}</a>
+                            <a class="page-link" href="${base}&page=${i + 1}">${i + 1}</a>
                         </li>`;
                     }
 
@@ -37,12 +48,12 @@ function pagination(pageNow, totalPage) {
                     if (i + 1 == pageNow) {
                         paginationItem.innerHTML += `
                         <li class="page-item active number-item">
-                            <a class="page-link" href="javascript:void(0)">${i + 1}</a>
+                            <a class="page-link" href="${base}&page=${i + 1}">${i + 1}</a>
                         </li>`;
                     } else {
                         paginationItem.innerHTML += `
                         <li class="page-item number-item">
-                            <a class="page-link" href="javascript:void(0)">${i + 1}</a>
+                            <a class="page-link" href="${base}&page=${i + 1}">${i + 1}</a>
                         </li>`;
                     }
 
@@ -52,12 +63,12 @@ function pagination(pageNow, totalPage) {
                     if (pageNow + i == pageNow) {
                         paginationItem.innerHTML += `
                         <li class="page-item active number-item">
-                            <a class="page-link" href="javascript:void(0)">${pageNow + i}</a>
+                            <a class="page-link" href="${base}&page=${pageNow + i}">${pageNow + i}</a>
                         </li>`;
                     } else {
                         paginationItem.innerHTML += `
                         <li class="page-item number-item">
-                            <a class="page-link" href="javascript:void(0)">${pageNow + i}</a>
+                            <a class="page-link" href="${base}&page=${pageNow + i}">${pageNow + i}</a>
                         </li>`;
                     }
 
@@ -65,7 +76,7 @@ function pagination(pageNow, totalPage) {
             }
             paginationItem.innerHTML += `
                 <li class="page-item" id="next">
-                    <a class="page-link" href="javascript:void(0)" aria-label="Next">
+                    <a class="page-link" href="${urlNext}" aria-label="Next">
                         <span aria-hidden="true">&raquo;</span>
                     </a>
                 </li>`
