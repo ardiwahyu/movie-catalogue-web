@@ -8,7 +8,79 @@
 </head>
 
 <body>
-    <h1>Detail html</h1>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+            <a class="navbar-brand" href="#">Movie Catalogue</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ml-auto mr-sm-4">
+                    <li class="nav-item mr-sm-4">
+                        <a class="nav-link active" id="movie" role="button" href="javascript:void(0)">Movie</a>
+                    </li>
+                    <li class="nav-item mr-sm-4">
+                        <a class="nav-link" id="tv" role="button" href="javascript:void(0)">TV Show</a>
+                    </li>
+                </ul>
+                <form class="form-inline my-2 my-lg-1" id="form-search" method="GET" action="javascript:void(0)">
+                    <input class="form-control mr-sm-2" id="input-search" type="search" placeholder="Title"
+                        aria-label="Search">
+                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                </form>
+            </div>
+        </nav>
+    </header>
+
+    <div class="overlay">
+        <div class="spanner show">
+            <div class="loader"></div>
+        </div>
+    </div>
+
+    <main>
+        <div class="jumbotron jumbotron-fluid mt-5">
+            <div class="row">
+                <div class="col-lg-2 col-md-2 col-sm-2"></div>
+                <div class="col-lg-3 col-md-3 col-sm-3">
+                    <div class="profile-card-5">
+                        <div id="poster" class="card-img-block"></div>
+                    </div>
+                </div>
+                <div class="col-lg-5 col-md-5 col-sm-5">
+                    <div class="container">
+                        <h1 id="txt-judul"></h1>
+                        <ul id="list-genre" class="list-group list-group-horizontal"></ul>
+                        <div class="progress">
+                            <span class="progress-left">
+                                <span class="progress-bar border-primary"></span>
+                            </span>
+                            <span class="progress-right">
+                                <span class="progress-bar border-primary"></span>
+                            </span>
+                            <div
+                                class="progress-value w-100 h-100 rounded-circle d-flex align-items-center justify-content-center">
+                                <div class="h7 font-weight-bold" id="value-rate"><sup class="small">%</sup></div>
+                            </div>
+                        </div>
+                        <p class="text-justify overview-image" id="overview-image"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- <div class="container">
+            <div class="row">
+                <div class="col-sm-12">
+                    <h2 class="text-center">Overview</h2>
+                    <hr>
+                    <p class="text-justify" id="overview"></p>
+                </div>
+            </div>
+        </div> -->
+    </main>
 </body>
 
 </html>
