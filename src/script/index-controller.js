@@ -5,6 +5,7 @@ import pagination from './component/pagination.js';
 function main() {
     const movieListElement = document.querySelector("list-movie");
     const overlay = document.querySelector(".overlay");
+    const spanner = document.querySelector(".spanner");
     const activeSelector = document.querySelector("#active-selector");
     const dropdown = document.querySelector("#navbarDropdown");
     const terpopuler = document.querySelector("#terpopuler");
@@ -20,6 +21,7 @@ function main() {
 
     const getContent = async () => {
         overlay.classList.add("show");
+        spanner.classList.add("show");
         let typeText;
         if (type == "tv") {
             typeText = "TV";
@@ -63,6 +65,7 @@ function main() {
 
     const renderResult = (result, type) => {
         overlay.classList.remove("show");
+        spanner.classList.remove("show");
         movieListElement.type = type;
         movieListElement.items = result;
         pagination(pageNow, totalPage, urlSend);
@@ -113,7 +116,7 @@ function main() {
         })
 
         getContent();
-    })
+    });
 }
 
 export default main;

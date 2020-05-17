@@ -24,17 +24,17 @@ class ListItem extends HTMLElement {
             src = 'src/image/default_poster.jpg'
         }
         this.innerHTML = `
-                <div class="card profile-card-5">
+            <a href="${window.location.origin}/detail.html?type=${this._type}&id=${this._item.id}">
+                <div class="card profile-card-5">    
                     <div class="card-img-block">
-                        <img class="card-img-top"
-                            src="${src}"
-                            alt="Card image cap">
+                        <img class="card-img-top" src="${src}" alt="Card image cap">
                     </div>
                     <div class="card-body pt-0 pb-3">
                         <h6 class="card-title">${title}</h6>
                         <p class="card-text">(${dateFormat(this._item.release_date, "yyyy")})</p>
                     </div>
                 </div>
+            </a>
         `;
     }
 }
